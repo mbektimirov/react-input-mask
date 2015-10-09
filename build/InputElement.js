@@ -1,8 +1,8 @@
+// https://github.com/sanniassin/react-input-mask
+
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-// https://github.com/sanniassin/react-input-mask
 
 var React = require("react");
 
@@ -11,7 +11,7 @@ var InputElement = React.createClass({
 
     charsRules: {
         "9": "[0-9]",
-        a: "[A-Za-z]",
+        "a": "[A-Za-z]",
         "*": "[A-Za-z0-9]"
     },
     defaultMaskChar: "_",
@@ -44,7 +44,7 @@ var InputElement = React.createClass({
         return prefix;
     },
     getFilledLength: function getFilledLength() {
-        var value = arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
 
         var i;
         var maskChar = this.state.maskChar;
@@ -82,14 +82,14 @@ var InputElement = React.createClass({
     isEmpty: function isEmpty() {
         var _this = this;
 
-        var value = arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
 
         return !value.split("").some(function (char, i) {
             return !_this.isPermanentChar(i) && _this.isAllowedChar(char, i);
         });
     },
     isFilled: function isFilled() {
-        var value = arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
 
         return this.getFilledLength(value) === this.state.mask.length;
     },
@@ -337,7 +337,7 @@ var InputElement = React.createClass({
     componentWillMount: function componentWillMount() {
         if (this.state.mask && this.state.value) {
             this.setState({
-                value: this.formatValue(this.state.value)
+                value: this.insertRawSubstr(this.formatValue(""), this.state.value, 0)
             });
         }
     },
