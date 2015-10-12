@@ -339,12 +339,9 @@ var InputElement = React.createClass({
             : this.state.value;
 
         var isMaskChanged = mask.mask && mask.mask !== this.state.mask;
-        if (isMaskChanged) {
+        if (isMaskChanged || (mask.mask && (newValue || this.isFocused()))) {
             var emptyValue = this.formatValue("", state);
             newValue = this.insertRawSubstr(emptyValue, newValue, 0, state);
-        }
-        if (mask.mask && (newValue || this.isFocused())) {
-            newValue = this.formatValue(newValue, state);
         }
         if (this.state.value !== newValue) {
             state.value = newValue;
