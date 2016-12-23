@@ -13,6 +13,11 @@ function checkPropertyOnElement(element, prop) {
         try {
             //try to visit the property.
             void element[prop];
+
+            if (typeof element[prop] === 'function') {
+                element[prop]();
+            }
+
             return true;
         } catch (e) {
             return false;
