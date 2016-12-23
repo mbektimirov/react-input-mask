@@ -223,7 +223,7 @@ var InputElement = React.createClass({
             end = input.selectionEnd;
         }
         else {
-            var range = document.selection.createRange();
+            var range = document.getSelection().createRange();
             var len = input.value.length;
 
             var inputRange = input.createTextRange();
@@ -247,7 +247,7 @@ var InputElement = React.createClass({
             pos = input.selectionStart;
         }
         else {
-            var range = document.selection.createRange();
+            var range = document.getSelection().createRange();
             var len = range.text.length;
             range.moveStart("character", -input.value.length);
             pos = range.text.length - len;
@@ -261,7 +261,7 @@ var InputElement = React.createClass({
             if (checkPropertyOnElement(input, "selectionStart") && checkPropertyOnElement(input, "selectionEnd")) {
                 input.selectionStart = input.selectionEnd = pos;
             }
-            else if ("setSelectionRange" in input) {
+            else if (checkPropertyOnElement(input, "setSelectionRange")) {
                 input.setSelectionRange(pos, pos);
             }
             else {
