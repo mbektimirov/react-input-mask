@@ -1,10 +1,26 @@
-// https://github.com/sanniassin/react-input-mask
-
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+// https://github.com/sanniassin/react-input-mask
+
 var React = require("react");
+
+function checkPropertyOnElement(element, prop) {
+    if (prop in element) {
+        try {
+            //try to visit the property.
+            void element[prop];
+            return true;
+        } catch (e) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 
 var InputElement = React.createClass({
     displayName: "InputElement",
@@ -17,7 +33,7 @@ var InputElement = React.createClass({
     defaultMaskChar: "_",
     lastCaretPos: null,
     isDOMElement: function isDOMElement(element) {
-        return typeof HTMLElement === "object" ? element instanceof HTMLElement // DOM2
+        return (typeof HTMLElement === "undefined" ? "undefined" : _typeof(HTMLElement)) === "object" ? element instanceof HTMLElement // DOM2
         : element.nodeType === 1 && typeof element.nodeName === "string";
     },
     // getDOMNode is deprecated but we need it to stay compatible with React 0.12
@@ -34,9 +50,8 @@ var InputElement = React.createClass({
     getPrefix: function getPrefix(newState) {
         var prefix = "";
 
-        var _ref = newState || this.state;
-
-        var mask = _ref.mask;
+        var _ref = newState || this.state,
+            mask = _ref.mask;
 
         for (var i = 0; i < mask.length && this.isPermanentChar(i, newState); ++i) {
             prefix += mask[i];
@@ -44,7 +59,7 @@ var InputElement = React.createClass({
         return prefix;
     },
     getFilledLength: function getFilledLength() {
-        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.value;
 
         var i;
         var maskChar = this.state.maskChar;
@@ -82,14 +97,14 @@ var InputElement = React.createClass({
     isEmpty: function isEmpty() {
         var _this = this;
 
-        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.value;
 
         return !value.split("").some(function (char, i) {
             return !_this.isPermanentChar(i) && _this.isAllowedChar(char, i);
         });
     },
     isFilled: function isFilled() {
-        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.value;
 
         return this.getFilledLength(value) === this.state.mask.length;
     },
@@ -103,10 +118,9 @@ var InputElement = React.createClass({
     formatValue: function formatValue(value, newState) {
         var _this2 = this;
 
-        var _ref2 = newState || this.state;
-
-        var maskChar = _ref2.maskChar;
-        var mask = _ref2.mask;
+        var _ref2 = newState || this.state,
+            maskChar = _ref2.maskChar,
+            mask = _ref2.mask;
 
         if (!maskChar) {
             var prefixLen = this.getPrefix(newState).length;
@@ -152,10 +166,9 @@ var InputElement = React.createClass({
         return value.slice(0, pos) + newSubstr + value.slice(pos + newSubstr.length);
     },
     insertRawSubstr: function insertRawSubstr(value, substr, pos, newState) {
-        var _ref3 = newState || this.state;
-
-        var mask = _ref3.mask;
-        var maskChar = _ref3.maskChar;
+        var _ref3 = newState || this.state,
+            mask = _ref3.mask,
+            maskChar = _ref3.maskChar;
 
         var isFilled = this.isFilled(value);
         substr = substr.split("");
@@ -184,10 +197,9 @@ var InputElement = React.createClass({
         return value;
     },
     getRawSubstrLength: function getRawSubstrLength(value, substr, pos, newState) {
-        var _ref4 = newState || this.state;
-
-        var mask = _ref4.mask;
-        var maskChar = _ref4.maskChar;
+        var _ref4 = newState || this.state,
+            mask = _ref4.mask,
+            maskChar = _ref4.maskChar;
 
         substr = substr.split("");
         for (var i = pos; i < mask.length && substr.length;) {
@@ -227,7 +239,7 @@ var InputElement = React.createClass({
         var start = 0;
         var end = 0;
 
-        if ("selectionStart" in input && "selectionEnd" in input) {
+        if (checkPropertyOnElement(input, "selectionStart") && checkPropertyOnElement(input, "selectionEnd")) {
             start = input.selectionStart;
             end = input.selectionEnd;
         } else {
@@ -251,7 +263,7 @@ var InputElement = React.createClass({
         var input = this.getInputDOMNode();
         var pos = 0;
 
-        if ("selectionStart" in input) {
+        if (checkPropertyOnElement(input, "selectionStart")) {
             pos = input.selectionStart;
         } else {
             var range = document.selection.createRange();
@@ -265,7 +277,7 @@ var InputElement = React.createClass({
     setCaretPos: function setCaretPos(pos) {
         var input;
         var setPos = function setPos() {
-            if ("selectionStart" in input && "selectionEnd" in input) {
+            if (checkPropertyOnElement(input, "selectionStart") && checkPropertyOnElement(input, "selectionEnd")) {
                 input.selectionStart = input.selectionEnd = pos;
             } else if ("setSelectionRange" in input) {
                 input.setSelectionRange(pos, pos);
@@ -437,10 +449,10 @@ var InputElement = React.createClass({
         }
 
         var caretPos = this.getCaretPos();
-        var _state = this.state;
-        var value = _state.value;
-        var mask = _state.mask;
-        var maskChar = _state.maskChar;
+        var _state = this.state,
+            value = _state.value,
+            mask = _state.mask,
+            maskChar = _state.maskChar;
 
         var maskLen = mask.length;
         var prefixLen = this.getPrefix().length;

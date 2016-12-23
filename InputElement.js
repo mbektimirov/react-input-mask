@@ -2,6 +2,20 @@
 
 var React = require("react");
 
+function checkPropertyOnElement(element, prop){
+    if (prop in element){
+        try {
+            //try to visit the property.
+            void(element[prop]);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+
 var InputElement = React.createClass({
     charsRules: {
         "9": "[0-9]",
@@ -204,7 +218,7 @@ var InputElement = React.createClass({
         var start = 0;
         var end = 0;
 
-        if ("selectionStart" in input && "selectionEnd" in input) {
+        if (checkPropertyOnElement(input, "selectionStart") && checkPropertyOnElement(input, "selectionEnd")) {
             start = input.selectionStart;
             end = input.selectionEnd;
         }
@@ -229,7 +243,7 @@ var InputElement = React.createClass({
         var input = this.getInputDOMNode();
         var pos = 0;
 
-        if ("selectionStart" in input) {
+        if (checkPropertyOnElement(input, "selectionStart")) {
             pos = input.selectionStart;
         }
         else {
@@ -244,7 +258,7 @@ var InputElement = React.createClass({
     setCaretPos: function(pos) {
         var input;
         var setPos = function() {
-            if ("selectionStart" in input && "selectionEnd" in input) {
+            if (checkPropertyOnElement(input, "selectionStart") && checkPropertyOnElement(input, "selectionEnd")) {
                 input.selectionStart = input.selectionEnd = pos;
             }
             else if ("setSelectionRange" in input) {
